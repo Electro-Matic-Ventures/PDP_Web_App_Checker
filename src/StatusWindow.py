@@ -1,10 +1,10 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout
 
 
-class StatusMessage(QWidget):
+class StatusWindow(QWidget):
 
     def __init__(self):
-        self.__init__(self)
+        QWidget.__init__(self)
         self.message = self.__create_message()
         self.__layout = self.__create_layout()
         self.__add_widgets_to_layout()

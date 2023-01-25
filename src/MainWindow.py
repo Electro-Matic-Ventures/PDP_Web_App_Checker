@@ -1,14 +1,15 @@
-from PyQt6.QtCore import Slot
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QVBoxLayout, QWidget
 from BrowseGroup import BrowseGroup
 from ExecuteButton import ExecuteButton
 from StatusWindow import StatusWindow
+from FileData import FileData
 
 
 class MainWindow(QMainWindow):
     
     def __init__(self):
-        super().__init__()
+        QMainWindow.__init__(self)
+        self.__file_data = FileData()
         self.__set_main_window_parameters()
         self.__excel_file_browser = self.__create_excel_file_browser()
         self.__web_app_file_browser = self.__create_web_app_file_browser()
@@ -23,7 +24,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.__central_widget)
         return
     
-    def __set_main_window_parameters()-> None:
+    def __set_main_window_parameters(self)-> None:
         self.setWindowTitle("PDP Web App Cross Checker: 2023-01-24")
         return
     
@@ -41,21 +42,60 @@ class MainWindow(QMainWindow):
         
     def __create_execute_button(self)-> ExecuteButton:
         button = ExecuteButton('Compare')
-        return
+        return button
     
     def __create_status_window(self)-> StatusWindow:
         window = StatusWindow()
         return window
+    
+    def __connect_widgets_to_actions(self)-> None:
+        self.__excel_file_browser.browse_button.clicked.connect(self.__browse_for_excel_file)
+        self.__web_app_file_browser.browse_button.clicked.connect(self.__browse_for_web_app_file)
+        self.__output_path_browser.browse_button.clicked.connect(self.__browse_for_output_path)
+        return
     
     def __create_layout(self)-> QVBoxLayout:
         layout = QVBoxLayout()
         return layout
     
     def __add_widgets_to_layout(self)-> None:
+        self.__layout.addWidget(self.__excel_file_browser)
+        self.__layout.addWidget(self.__web_app_file_browser)
+        self.__layout.addWidget(self.__output_path_browser)
+        self.__layout.addWidget(self.__execute_button)
+        self.__layout.addWidget(self.__status_window)
         return
         
-    @Slot()
-    def __browse_button_action(self, message:str, file_types:str)-> str:
-        file_name = QFileDialog.getOpenFileName(self, message, '', file_types)
-        return file_name[0]                                                
-                                                
+    def __browse_for_excel_file(self)-> None:
+        caption = 'Select Excel file for cross checking...'
+        filter_ = 'Excel Files (*.xlsx)'
+        file_name = QFileDialog.getOpenFileName(
+            parent = self,
+            caption = caption,
+            filter = filter_
+        )
+        self.__file_data.excel = file_name[0]
+        self.__excel_file_browser.path_display.setText(self.__file_data.excel)
+        return                     
+    
+    def __browse_for_web_app_file(self)-> None:
+        caption = 'Select PDP Web Application output file...'
+        filter_ = 'CSV Files (*.csv)'
+        file_name = QFileDialog.getOpenFileName(
+            parent = self,
+            caption = caption,
+            filter = filter_
+        )       
+        self.__file_data.web_app = file_name[0]
+        self.__web_app_file_browser.path_display.setText(self.__file_data.web_app)
+        return
+        
+    def __browse_for_output_path(self)-> None:
+        caption = 'Select output path...'
+        file_name = QFileDialog.getExistingDirectory(
+            parent = self,
+            caption = caption
+        )       
+        self.__file_data.output = file_name
+        self.__output_path_browser.path_display.setText(self.__file_data.output)
+        return

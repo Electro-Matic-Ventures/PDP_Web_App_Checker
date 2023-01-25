@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QWidget, QPushButton, QVBoxLayout
 class ExecuteButton(QWidget):
 
     def __init__(self, text:str):
-        super().__init__(self)
+        QWidget.__init__(self)
         self.button = self.__create_button(text)
         self.__layout = self.__create_layout()
         self.__add_widgets_to_layout()
