@@ -1,17 +1,17 @@
 from openpyxl import load_workbook
 from SplitPartNumber import SplitPartNumber
-from WorkBookAddresses import WorkbookAddresses
+from ConfigureBookAddresses import ConfigureBookAddresses
 
 
 class WritePartNumber:
     
     __file_name: str
     __split_part_number: SplitPartNumber
-    __addresses: WorkbookAddresses
+    __addresses: ConfigureBookAddresses
     
     def __init__(self, file_name:str, part_number:str):
         self.__split_part_number = self.__split_part_number(part_number)
-        self.__addresses = WorkbookAddresses()
+        self.__addresses = ConfigureBookAddresses()
         self.__file_name = file_name
         self.__write()
         return
@@ -24,6 +24,7 @@ class WritePartNumber:
             address = self.__addresses.cpdp_400.cell_addresses.get(key)
             work_sheet[address] = value
         work_book.save(self.__file_name)
+        work_book.close()
         return
     
     def __split_part_number(self, part_number:str)-> SplitPartNumber:

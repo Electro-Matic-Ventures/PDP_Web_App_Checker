@@ -1,15 +1,17 @@
 from SplitPartNumber import SplitPartNumber
-from WorkbookAddress import WorkbookAddress
+from ConfigurePageAddresses import ConfigurePageAddresses
 
-class WorkbookAddresses:
-    
-    cpdp_400: WorkbookAddress
-    
+
+class ConfigureBookAddresses:
+
+    cpdp_400: ConfigurePageAddresses
+
     def __init__(self):
         self.cpdp_400 = self.__build_cpdp_400()
         return
     
-    def __build_cpdp_400(self)-> WorkbookAddress:
+
+    def __build_cpdp_400(self)-> ConfigurePageAddresses:
         cell_addresses = SplitPartNumber(
             pdp='B1',
             type_='C1',
@@ -23,4 +25,4 @@ class WorkbookAddresses:
             phase_transformer='N1',
             feed='P1'
         )
-        return WorkbookAddress('400A CPDP Config', cell_addresses)       
+        return ConfigurePageAddresses('400A CPDP Config', cell_addresses)       

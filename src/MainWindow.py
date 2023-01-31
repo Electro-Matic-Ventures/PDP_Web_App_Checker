@@ -2,14 +2,15 @@ from PyQt6.QtWidgets import QMainWindow, QFileDialog, QVBoxLayout, QWidget
 from BrowseGroup import BrowseGroup
 from ExecuteButton import ExecuteButton
 from StatusWindow import StatusWindow
-from FileData import FileData
+from FileLocations import FileLocations
+from Compare import Compare
 
 
 class MainWindow(QMainWindow):
     
     def __init__(self):
         QMainWindow.__init__(self)
-        self.__file_data = FileData()
+        self.__file_locations = FileLocations()
         self.__set_main_window_parameters()
         self.__excel_file_browser = self.__create_excel_file_browser()
         self.__web_app_file_browser = self.__create_web_app_file_browser()
@@ -26,6 +27,7 @@ class MainWindow(QMainWindow):
     
     def __set_main_window_parameters(self)-> None:
         self.setWindowTitle("PDP Web App Cross Checker: 2023-01-24")
+        self.setMinimumWidth(500)
         return
     
     def __create_excel_file_browser(self)-> BrowseGroup:
@@ -52,6 +54,7 @@ class MainWindow(QMainWindow):
         self.__excel_file_browser.browse_button.clicked.connect(self.__browse_for_excel_file)
         self.__web_app_file_browser.browse_button.clicked.connect(self.__browse_for_web_app_file)
         self.__output_path_browser.browse_button.clicked.connect(self.__browse_for_output_path)
+        self.__execute_button.button.clicked.connect(self.__compare_sheets)
         return
     
     def __create_layout(self)-> QVBoxLayout:
@@ -74,8 +77,8 @@ class MainWindow(QMainWindow):
             caption = caption,
             filter = filter_
         )
-        self.__file_data.excel = file_name[0]
-        self.__excel_file_browser.path_display.setText(self.__file_data.excel)
+        self.__file_locations.excel = file_name[0]
+        self.__excel_file_browser.path_display.setText(self.__file_locations.excel)
         return                     
     
     def __browse_for_web_app_file(self)-> None:
@@ -86,8 +89,8 @@ class MainWindow(QMainWindow):
             caption = caption,
             filter = filter_
         )       
-        self.__file_data.web_app = file_name[0]
-        self.__web_app_file_browser.path_display.setText(self.__file_data.web_app)
+        self.__file_locations.web_app = file_name[0]
+        self.__web_app_file_browser.path_display.setText(self.__file_locations.web_app)
         return
         
     def __browse_for_output_path(self)-> None:
@@ -96,6 +99,11 @@ class MainWindow(QMainWindow):
             parent = self,
             caption = caption
         )       
-        self.__file_data.output = file_name
-        self.__output_path_browser.path_display.setText(self.__file_data.output)
+        self.__file_locations.output = file_name
+        self.__output_path_browser.path_display.setText(self.__file_locations.output)
         return
+    
+    def __compare_sheets(self)-> None:
+        Compare(self.__file_locations)
+        return
+        

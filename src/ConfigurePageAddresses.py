@@ -1,7 +1,7 @@
 from SplitPartNumber import SplitPartNumber
 
 
-class WorkbookAddress:
+class ConfigurePageAddresses:
     
     sheet_name: str
     cell_addresses: SplitPartNumber 
